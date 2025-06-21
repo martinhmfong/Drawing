@@ -10,9 +10,6 @@ class Canvas:
         self.height = height
         self.pixels = [[' ' for _ in range(self.width)] for _ in range(self.height)]
 
-    def __str__(self):
-        return '\n'.join(''.join(row) for row in self.pixels)
-
     @staticmethod
     def _validate_dimensions(width, height):
         if width <= 0 and height <= 0:
