@@ -13,6 +13,11 @@ class OutOfCanvasError(DrawingBoardError):
     pass
 
 
-class CanvasNotReady(DrawingBoardError):
+class CanvasNotReadyError(DrawingBoardError):
     """Raised when operations are attempted without canvas."""
+    pass
+
+
+class WrongOrientationError(DrawingBoardError):
+    """Raise when the line is not vertical or horizontal"""
     pass
