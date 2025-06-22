@@ -13,13 +13,17 @@ def validate_params(cmd: str, params: list) -> tuple:
             except ValueError:
                 raise CommandError("Canvas dimensions must be integers")
 
-        case ['L' | 'R', x1, y1, x2, y2, c] if len(c) == 1:
+        case ['L' | 'R', x1, y1, x2, y2, c]:
+            if len(c) != 1:
+                raise CommandError("Parameter c must be a character (length 1)")
             try:
                 return int(x1), int(y1), int(x2), int(y2), c
             except ValueError:
                 raise CommandError("Coordinates must be integers")
 
-        case ['B', x, y, c] if len(c) == 1:
+        case ['B', x, y, c]:
+            if len(c) != 1:
+                raise CommandError("Parameter c must be a character (length 1)")
             try:
                 return int(x), int(y), c
             except ValueError:
