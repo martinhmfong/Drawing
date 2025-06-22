@@ -38,11 +38,32 @@ class DrawingBoard:
             for x in range(min(x1, x2), max(x1, x2) + 1):
                 self.canvas.draw_pixel(x, y1, c)
 
+    def draw_rectangle(self, x1: int, y1: int, x2: int, y2: int, c: str):
+        if not self.canvas:
+            raise CanvasNotReadyError('Canvas not ready, please initiate a new canvas ')
+        # Ensure top-left and bottom-right order
+        left, right = min(x1, x2), max(x1, x2)
+        top, bottom = min(y1, y2), max(y1, y2)
+        # Validate all four corners (1-based)
+        for point in ((left, top), (right, top), (left, bottom), (right, bottom)):
+            self.canvas.valid_point(*point)
+        # Top and bottom sides
+        for x in range(left, right + 1):
+            self.canvas.draw_pixel(x, top, c)
+            self.canvas.draw_pixel(x, bottom, c)
+        # Left and right sides
+        for y in range(top + 1, bottom):
+            self.canvas.draw_pixel(left, y, c)
+            self.canvas.draw_pixel(right, y, c)
+
 
 if __name__ == '__main__':
     b = DrawingBoard()
-    b.new_canvas(3, 3)
+    b.new_canvas(10, 10)
     print(b)
-    b.draw_line(2, 2, 3, 2, '.')
-    # b.draw_line(2, 4, 4, 4, 'y')
+    b.draw_line(10, 10, 10, 5, 'x')
+    print(b)
+    b.draw_rectangle(1, 1, 5, 5, 'y')
+    print(b)
+    b.draw_rectangle(6, 6, 8, 9, 'z')
     print(b)

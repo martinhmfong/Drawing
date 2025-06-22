@@ -5,14 +5,11 @@ from src.exceptions import CanvasNotReadyError, WrongOrientationError
 
 
 class TestDrawingBoard(TestCase):
-    def setUp(self):
-        self.board = DrawingBoard()
-        self.board.new_canvas(5, 5)
-
     def test_new_canvas(self):
-        self.board.new_canvas(3, 4)
-        self.assertEqual(self.board.canvas.width, 3)
-        self.assertEqual(self.board.canvas.height, 4)
+        board = DrawingBoard()
+        board.new_canvas(3, 4)
+        self.assertEqual(board.canvas.width, 3)
+        self.assertEqual(board.canvas.height, 4)
 
     def test_validate_line_orientation(self):
         # Valid horizontal
@@ -29,20 +26,20 @@ class TestDrawingBoard(TestCase):
             board.draw_line(1, 1, 1, 2, 'x')
 
     def test_draw_line_horizontal_visual(self):
-        self.board.draw_line(2, 2, 3, 2, '.')
-        expected = (
-            '-------\n'
-            '|     |\n'
-            '| ..  |\n'
-            '|     |\n'
-            '|     |\n'
-            '|     |\n'
-            '-------'
-        )
-        self.assertEqual(str(self.board), expected)
+        board = DrawingBoard()
+        board.new_canvas(3, 3)
+        board.draw_line(2, 2, 3, 2, '.')
+        expected = ('-----\n'
+                    '|   |\n'
+                    '| ..|\n'
+                    '|   |\n'
+                    '-----')
+        self.assertEqual(str(board), expected)
 
     def test_draw_line_vertical_visual(self):
-        self.board.draw_line(2, 1, 2, 3, 'y')
+        board = DrawingBoard()
+        board.new_canvas(5, 5)
+        board.draw_line(2, 1, 2, 3, 'y')
         expected = (
             '-------\n'
             '| y   |\n'
@@ -52,4 +49,54 @@ class TestDrawingBoard(TestCase):
             '|     |\n'
             '-------'
         )
-        self.assertEqual(str(self.board), expected)
+        self.assertEqual(str(board), expected)
+
+    def test_draw_rectangle_basic(self):
+        board = DrawingBoard()
+        board.new_canvas(5, 5)
+        board.draw_rectangle(2, 2, 4, 4, 'o')
+        expected = (
+            '-------\n'
+            '|     |\n'
+            '| ooo |\n'
+            '| o o |\n'
+            '| ooo |\n'
+            '|     |\n'
+            '-------'
+        )
+        self.assertEqual(str(board), expected)
+
+    def test_draw_rectangle_full_canvas(self):
+        board = DrawingBoard()
+        board.new_canvas(3, 3)
+        board.draw_rectangle(1, 1, 3, 3, '*')
+        expected = (
+            '-----\n'
+            '|***|\n'
+            '|* *|\n'
+            '|***|\n'
+            '-----'
+        )
+        self.assertEqual(str(board), expected)
+
+    def test_draw_rectangle_single_point(self):
+        board = DrawingBoard()
+        board.new_canvas(4, 4)
+        board.draw_rectangle(2, 2, 2, 2, '#')
+        expected = (
+            '------\n'
+            '|    |\n'
+            '| #  |\n'
+            '|    |\n'
+            '|    |\n'
+            '------'
+        )
+        self.assertEqual(str(board), expected)
+
+    def test_draw_rectangle_invalid(self):
+        board = DrawingBoard()
+        board.new_canvas(3, 3)
+        with self.assertRaises(Exception):
+            board.draw_rectangle(0, 0, 2, 2, 'x')
+        with self.assertRaises(Exception):
+            board.draw_rectangle(1, 1, 4, 4, 'x')
