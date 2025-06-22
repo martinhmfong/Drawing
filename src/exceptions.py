@@ -28,4 +28,8 @@ class WrongOrientationError(DrawingError):
 
 class OutOfCanvasError(DrawingError):
     """Raised when trying to draw outside canvas bounds."""
+
+
+class CommandError(DrawingError):
+    """Raised when there is an error in command format or parameters."""
     pass

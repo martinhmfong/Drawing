@@ -8,6 +8,7 @@ class DrawingBoard:
         self.canvas = canvas
 
     def __str__(self):
+        self._ensure_canvas()
         border = '-' * (self.canvas.width + 2)
         rows = ['|' + ''.join(row) + '|' for row in self.canvas.pixels]
         return '\n'.join([border] + rows + [border])
