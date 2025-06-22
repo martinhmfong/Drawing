@@ -22,8 +22,11 @@ class Canvas:
         self.height = height
         self.pixels = [[' ' for _ in range(self.width)] for _ in range(self.height)]
 
+    def is_inside(self, x: int, y: int) -> bool:
+        return 0 < x <= self.width and 0 < y <= self.height
+
     def valid_point(self, x: int, y: int):
-        if 0 < x <= self.width and 0 < y <= self.height:
+        if self.is_inside(x, y):
             return
         raise OutOfCanvasError(f"The required pixel ({x},{y}) is outside of the canvas [{self.width}, {self.height}]")
 
@@ -34,3 +37,7 @@ class Canvas:
         """
         self.valid_point(x, y)
         self.pixels[y - 1][x - 1] = char
+
+    def get_pixel(self, x: int, y: int) -> str:
+        self.valid_point(x, y)
+        return self.pixels[y - 1][x - 1]

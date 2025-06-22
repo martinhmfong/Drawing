@@ -100,3 +100,68 @@ class TestDrawingBoard(TestCase):
             board.draw_rectangle(0, 0, 2, 2, 'x')
         with self.assertRaises(Exception):
             board.draw_rectangle(1, 1, 4, 4, 'x')
+
+    def test_bucket_fill_no_canvas(self):
+        board = DrawingBoard()
+        with self.assertRaises(CanvasNotReadyError):
+            board.bucket_fill(1, 1, 'x')
+
+    def test_bucket_fill_empty_area(self):
+        board = DrawingBoard()
+        board.new_canvas(3, 3)
+        board.bucket_fill(2, 2, '*')
+        expected = (
+            '-----\n'
+            '|***|\n'
+            '|***|\n'
+            '|***|\n'
+            '-----'
+        )
+        self.assertEqual(str(board), expected)
+
+    def test_bucket_fill_inside_rectangle(self):
+        board = DrawingBoard()
+        board.new_canvas(5, 5)
+        board.draw_rectangle(2, 2, 4, 4, 'o')
+        board.bucket_fill(3, 3, '*')
+        expected = (
+            '-------\n'
+            '|     |\n'
+            '| ooo |\n'
+            '| o*o |\n'
+            '| ooo |\n'
+            '|     |\n'
+            '-------'
+        )
+        self.assertEqual(str(board), expected)
+
+    def test_bucket_fill_outside_rectangle(self):
+        board = DrawingBoard()
+        board.new_canvas(5, 5)
+        board.draw_rectangle(2, 2, 4, 4, 'o')
+        board.bucket_fill(1, 1, '#')
+        expected = (
+            '-------\n'
+            '|#####|\n'
+            '|#ooo#|\n'
+            '|#o o#|\n'
+            '|#ooo#|\n'
+            '|#####|\n'
+            '-------'
+        )
+        self.assertEqual(str(board), expected)
+
+    def test_bucket_fill_large_canvas(self):
+        board = DrawingBoard()
+        # Create a large canvas that would exceed recursive depth limit
+        board.new_canvas(1000, 1000)
+        # Draw a border
+        board.draw_rectangle(1, 1, 1000, 1000, 'x')
+        # Fill the inside - this would cause stack overflow with recursive approach
+        board.bucket_fill(500, 500, '*')
+        # Check a few points to verify fill worked
+        self.assertEqual(board.canvas.get_pixel(500, 500), '*')
+        self.assertEqual(board.canvas.get_pixel(2, 2), '*')
+        self.assertEqual(board.canvas.get_pixel(999, 999), '*')
+        # Verify border remains intact
+        self.assertEqual(board.canvas.get_pixel(1, 1), 'x')
