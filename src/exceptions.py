@@ -1,23 +1,31 @@
-class DrawingBoardError(Exception):
-    """Base exception for drawing board errors."""
+"""Custom exceptions for the drawing program."""
+
+
+class DrawingError(Exception):
+    """Base class for all drawing related errors."""
     pass
 
 
-class CanvasDimensionError(DrawingBoardError):
-    """Raised when canvas dimensions are invalid."""
+class CanvasError(DrawingError):
+    """Base class for canvas-related errors."""
     pass
 
 
-class OutOfCanvasError(DrawingBoardError):
-    """Raised when drawing a point outside the canvas."""
+class CanvasNotReadyError(CanvasError):
+    """Raised when trying to draw on a non-existent canvas."""
     pass
 
 
-class CanvasNotReadyError(DrawingBoardError):
-    """Raised when operations are attempted without canvas."""
+class CanvasDimensionError(CanvasError):
+    """Raised when invalid canvas dimensions are provided."""
     pass
 
 
-class WrongOrientationError(DrawingBoardError):
-    """Raise when the line is not vertical or horizontal"""
+class WrongOrientationError(DrawingError):
+    """Raised when a line is neither horizontal nor vertical."""
+    pass
+
+
+class OutOfCanvasError(DrawingError):
+    """Raised when trying to draw outside canvas bounds."""
     pass
