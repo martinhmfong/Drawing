@@ -25,16 +25,27 @@ class TestCanvas(TestCase):
 
     def test_draw_point(self):
         c = Canvas(3, 3)
+        # Valid points (1-based)
         c.draw_pixel(1, 1, 'A')
-        self.assertEqual(c.pixels[1][1], 'A')
+        self.assertEqual(c.pixels[0][0], 'A')
+        c.draw_pixel(3, 3, 'B')
+        self.assertEqual(c.pixels[2][2], 'B')
 
-        # Replace the exiting pixel
+        # Replace the existing pixel
         c.draw_pixel(1, 1, 'X')
-        self.assertEqual(c.pixels[1][1], 'X')
+        self.assertEqual(c.pixels[0][0], 'X')
 
-        # Out of bounds
-        with self.assertRaises(OutOfCanvasError):
-            c.draw_pixel(4, 1, 'B')
+    def test_out_of_canvas(self):
+        cases = (
+            (4, 1,),
+            (1, 4,),
+            (0, 2,),
+            (2, 0,),
+            (-1, 2),
+            (2, -1),
+        )
 
-        with self.assertRaises(OutOfCanvasError):
-            c.draw_pixel(-1, 2, 'C')
+        c = Canvas(3, 3)
+        for x, y in cases:
+            with self.assertRaises(OutOfCanvasError):
+                c.draw_pixel(x, y, '*')
